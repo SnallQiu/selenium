@@ -65,10 +65,20 @@ class Login:
         print(driver.get_cookies())
 
         x
+    def login_alipay(self):
+        driver = webdriver.Chrome()
+        driver.maximize_window()
+        driver.get(self.url)
+        element_switch = WebDriverWait(driver, 60).until(lambda driver: \
+                                                             driver.find_element_by_xpath('//*[@id= "J_Quick2Static"]'))
+        time.sleep(2)
+        element_switch.click()
+        driver.find_element_by_xpath('//*[@id="J_OtherLogin"]').click()
+
 
 
 
 tel = 'qqc琴城'
 password = ''
 mytao = Login(tel,password)
-mytao.login()
+mytao.login_alipay()
