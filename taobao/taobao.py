@@ -74,11 +74,25 @@ class Login:
         time.sleep(2)
         element_switch.click()
         driver.find_element_by_xpath('//*[@id="J_OtherLogin"]').click()
+        element_switch = WebDriverWait(driver,60).until(lambda driver:\
+                                                            driver.find_element_by_xpath('//*[@id="J-loginMethod-tabs"]/li[2]'))
+        element_switch.click()
+        account = driver.find_element_by_xpath('//*[@id="J-input-user"]')
+        account.send_keys(self.tel)
+        password = driver.find_element_by_xpath('//*[@id="password_rsainput"]')
+        password.send_keys(self.passwd)
+
+        driver.find_element_by_xpath('//*[@id="J-login-btn"]').click()
 
 
 
 
-tel = 'qqc琴城'
+        x
+
+
+
+
+tel = '17854212463'
 password = ''
 mytao = Login(tel,password)
-mytao.login_alipay()
+mytao.login()
