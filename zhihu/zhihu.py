@@ -47,7 +47,7 @@ class Zhihu:
 
 
 account = '17854212463'
-passwd = 'qq345817576!'
+passwd = ''
 myzhihu = Zhihu(account,passwd)
 session = myzhihu.login()
 myzhihu.getinfo(session)
