@@ -1,6 +1,7 @@
 # -- coding: utf-8 --
 # author: snall  time: 2018/1/24
-
+import requests
+from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,6 +9,7 @@ from selenium.webdriver import ActionChains
 import time
 class Login:
     url = 'https://login.taobao.com/member/login.jhtml'
+    url_taobao = 'https://i.taobao.com/my_taobao.htm'
     def __init__(self,tel='',passwd=''):
         self.tel = tel #账号
         self.passwd = passwd
@@ -66,6 +68,9 @@ class Login:
 
         x
     def login_alipay(self):
+        session = requests.session()
+        session.headers.clear()
+
         driver = webdriver.Chrome()
         driver.maximize_window()
         driver.get(self.url)
@@ -83,11 +88,23 @@ class Login:
         password.send_keys(self.passwd)
 
         driver.find_element_by_xpath('//*[@id="J-login-btn"]').click()
+        cookies = driver.get_cookies()
+        for cookie in cookies:
+            session.cookies.set(cookie['name'], cookie['value'])
+        return session
+
+    def getinfo(self, session):
+        r = session.get(self.url_taobao).text
+        print(r)
+        selector = etree.HTML(r)
+        titles = selector.xpath("//title/text()")
+        for title in titles:
+            print(title)
 
 
 
 
-        x
+
 
 
 
@@ -95,4 +112,5 @@ class Login:
 tel = '17854212463'
 password = ''
 mytao = Login(tel,password)
-mytao.login()
+session = mytao.login_alipay()
+mytao.getinfo(session)
