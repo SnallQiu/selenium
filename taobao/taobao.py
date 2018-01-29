@@ -1,6 +1,7 @@
 # -- coding: utf-8 --
 # author: snall  time: 2018/1/24
 import requests
+import re
 from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -9,13 +10,13 @@ from selenium.webdriver import ActionChains
 import time
 class Login:
     url = 'https://login.taobao.com/member/login.jhtml'
-    url_taobao = 'https://i.taobao.com/my_taobao.htm'
+    url_taobao = 'https://buyertrade.taobao.com/trade/itemlist/asyncBought.htm?action=itemlist/BoughtQueryAction&event_submit_do_query=1&_input_charset=utf8'
     def __init__(self,tel='',passwd=''):
         self.tel = tel #账号
         self.passwd = passwd
 
     def login(self):
-        driver = webdriver.Chrome()
+        driver = webdriver.PhantomJS()
         driver.maximize_window()
         driver.get(self.url)
         element_switch = WebDriverWait(driver,60).until(lambda driver:\
@@ -88,18 +89,51 @@ class Login:
         password.send_keys(self.passwd)
 
         driver.find_element_by_xpath('//*[@id="J-login-btn"]').click()
+
         cookies = driver.get_cookies()
+        print("登陆成功！")
         for cookie in cookies:
             session.cookies.set(cookie['name'], cookie['value'])
         return session
 
     def getinfo(self, session):
-        r = session.get(self.url_taobao).text
+
+        form_data = {
+            'buyerNick':'',
+            'dateBegin':0,
+        'dateEnd': 0,
+        'lastStartRow': '2144670213_9223370573317340807_1912483380051302_1912483380051302',
+        'logisticsService':'',
+        'options':0,
+        'orderStatus':'',
+        'pageNum':1,
+        'pageSize': 15,
+        'queryBizType':'',
+        'queryOrder':'desc',
+        'rateStatus':'',
+        'refund':'',
+        'sellerNick':'',
+        'prePageNo':'7',
+        }
+        r = session.post(self.url_taobao,data = form_data).text
+        print('+++++++')
         print(r)
-        selector = etree.HTML(r)
-        titles = selector.xpath("//title/text()")
-        for title in titles:
-            print(title)
+        print('+++++++')
+
+
+
+
+        '''
+        page_money = re.search('realTotal.*?(\d*\.\d*)',r).group(1)
+        all_money = 0
+        for i in page_money:
+            all_money = int(i)+all_money
+        print(all_money)
+        '''
+
+
+
+
 
 
 
